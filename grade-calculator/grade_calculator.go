@@ -2,9 +2,19 @@ package esepunittests
 
 type GradeCalculator struct {
 	grades []Grade
+	mode GradingMode
 }
+type GradingMode int
+
+const (
+	LetterGrade GradingMode = iota
+	PassFail
+)
+
+const passingGrade = 60
 
 type GradeType int
+
 
 const (
 	Assignment GradeType = iota
@@ -28,14 +38,22 @@ type Grade struct {
 	Type  GradeType
 }
 
-func NewGradeCalculator() *GradeCalculator {
+func NewGradeCalculator(mode GradingMode) *GradeCalculator {
 	return &GradeCalculator{
 		grades: make([]Grade, 0),
+		mode:   mode,
 	}
 }
 
 func (gc *GradeCalculator) GetFinalGrade() string {
 	numericalGrade := gc.calculateNumericalGrade()
+
+	if gc.mode == PassFail {
+		if numericalGrade >= passingGrade {
+			return "Pass"
+		}
+		return "Fail"
+	}
 
 	if numericalGrade >= 90 {
 		return "A"
